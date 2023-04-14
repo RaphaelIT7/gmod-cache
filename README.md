@@ -7,6 +7,8 @@ Note: This Project uses [Garry's Mod Common](https://github.com/danielga/garrys
 2. Move the `gmsv_clearcache_win32.dll` into your `garrysmod/lua/bin` folder.
 3. You need insert
 ```lua
-require("clearcache")
+if file.Exists("lua/bin/gmsv_clearcache_win32.dll", "GAME") then
+  require("clearcache")
+end
 ```
 into the `garrysmod/lua/menu/menu.lua` file at the bottom.
