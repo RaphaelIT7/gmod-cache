@@ -1,4 +1,5 @@
 This Project clears the Model Cache when disconnecting from a server, only the main branch of Gmod is supported.  
+It also activates Async Load for some DataTypes. (`MDLCACHE_STUDIOHWDATA`, `MDLCACHE_VCOLLIDE` and `MDLCACHE_VERTEXES`)
 
 Note: This Project uses [Garry's Mod Common](https://github.com/danielga/garrysmod_common)
 
