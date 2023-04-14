@@ -5,6 +5,7 @@
 #include "datacache/imdlcache.h"
 #include "vstdlib/jobthread.h";
 
+#define Cache_Debug 0
 
 static SourceSDK::FactoryLoader engine_loader("engine");
 static SourceSDK::FactoryLoader datacache_loader("datacache");
@@ -14,7 +15,8 @@ static IMDLCache* MDLCache = nullptr;
 
 static bool connected = false;
 unsigned ClearCache(void *params) {
-	ThreadSleep(1000); // We need to wait for the client to shutdown. Because it uses the MDLCache and if we try to use it, it crashes.
+	ThreadSleep(1000);	// We need to wait for the client to shutdown. Because it uses the MDLCache and if we try to use it, it crashes.
+
 	CThreadMutex().Lock();
 
 	MDLCache->Flush(MDLCACHE_FLUSH_ALL);
@@ -24,6 +26,7 @@ unsigned ClearCache(void *params) {
 	return 0;
 }
 
+static ThreadHandle_t current_mdlthread;
 class DisconnectEventListener : public IGameEventListener2
 {
 public:
@@ -33,7 +36,8 @@ public:
 	{
 		if (connected) 
 		{
-			CreateSimpleThread(ClearCache, nullptr);
+			current_mdlthread = CreateSimpleThread(ClearCache, nullptr);
+			ThreadDetach(current_mdlthread);
 		}
 	}
 };
@@ -49,9 +53,41 @@ public:
 		connected = true;
 	}
 };
-
 static ActivateEventListener* ActivateListener = new ActivateEventListener;
 static DisconnectEventListener* DisconnectListener = new DisconnectEventListener;
+void AddAsyncCacheDataType(MDLCacheDataType_t type, char* type_str) {
+	MDLCache->SetAsyncLoad(type, true);
+
+	if (!MDLCache->GetAsyncLoad(type)) {
+		std::string msg = "Failed to enable AsyncLoad for type ";
+		msg.append(type_str);
+		msg.append("\n");
+		ConDMsg(msg.c_str());
+	}
+}
+
+#if Cache_Debug == 1
+void CheckAsyncCacheDataType(MDLCacheDataType_t type, char* type_str) {
+	if (!MDLCache->GetAsyncLoad(type)) {
+		std::string msg = "Failed to enable AsyncLoad for type ";
+		msg.append(type_str);
+		msg.append("\n");
+		ConDMsg(msg.c_str());
+	}
+}
+
+LUA_FUNCTION_STATIC(check_async) {
+	CheckAsyncCacheDataType(MDLCACHE_STUDIOHDR, "MDLCACHE_STUDIOHDR");
+	CheckAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, "MDLCACHE_STUDIOHWDATA");
+	CheckAsyncCacheDataType(MDLCACHE_VCOLLIDE, "MDLCACHE_VCOLLIDE");
+	CheckAsyncCacheDataType(MDLCACHE_ANIMBLOCK, "MDLCACHE_ANIMBLOCK");
+	CheckAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, "MDLCACHE_VIRTUALMODEL");
+	CheckAsyncCacheDataType(MDLCACHE_VERTEXES, "MDLCACHE_VERTEXES");
+	CheckAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, "MDLCACHE_DECODEDANIMBLOCK");
+
+	return 1;
+}
+#endif
 
 GMOD_MODULE_OPEN()
 {
@@ -68,6 +104,21 @@ GMOD_MODULE_OPEN()
 	gameeventmanager->AddListener(ActivateListener, "player_activate", false);
 
 	LuaPrint("[ClearCache] Successfully Loaded.");
+	
+	// AddAsyncCacheDataType(MDLCACHE_STUDIOHDR, "MDLCACHE_STUDIOHDR"); cannot be activated
+	AddAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, "MDLCACHE_STUDIOHWDATA");
+	AddAsyncCacheDataType(MDLCACHE_VCOLLIDE, "MDLCACHE_VCOLLIDE");
+	// AddAsyncCacheDataType(MDLCACHE_ANIMBLOCK, "MDLCACHE_ANIMBLOCK"); if activated, it breaks some playermodels
+	// AddAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, "MDLCACHE_VIRTUALMODEL"); cannot be activated
+	AddAsyncCacheDataType(MDLCACHE_VERTEXES, "MDLCACHE_VERTEXES");
+	// AddAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, "MDLCACHE_DECODEDANIMBLOCK"); cannot be activated
+
+	#if Cache_Debug == 1
+		LUA->GetField(-1, "engine");
+			LUA->PushCFunction(check_async);
+			LUA->SetField(-2, "check_async");
+		LUA->Pop(1);
+	#endif
 
 	return 0;
 }
@@ -76,5 +127,3 @@ GMOD_MODULE_CLOSE()
 {
 	return 0;
 }
-
-// lua_run_menu PrintTable(engine.GetCachedModels())
