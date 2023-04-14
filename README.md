@@ -12,4 +12,6 @@ if file.Exists("lua/bin/gmsv_clearcache_win32.dll", "GAME") then
   require("clearcache")
 end
 ```
-into the `garrysmod/lua/menu/menu.lua` file at the bottom.
+Into the `garrysmod/lua/menu/menu.lua` file at the bottom.
+
+Note: If you change your Gmod branch or an update is made, your changes could get removed.
