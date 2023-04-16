@@ -26,7 +26,6 @@ unsigned ClearCache(void *params) {
 	return 0;
 }
 
-static ThreadHandle_t current_mdlthread;
 class DisconnectEventListener : public IGameEventListener2
 {
 public:
@@ -36,8 +35,7 @@ public:
 	{
 		if (connected) 
 		{
-			current_mdlthread = CreateSimpleThread(ClearCache, nullptr);
-			ThreadDetach(current_mdlthread);
+			CreateSimpleThread(ClearCache, nullptr);
 		}
 	}
 };
