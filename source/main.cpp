@@ -10,7 +10,7 @@
 static SourceSDK::FactoryLoader engine_loader("engine");
 static SourceSDK::FactoryLoader datacache_loader("datacache");
 
-static IGameEventManager2* gameeventmanager = nullptr;
+static IGameEventManager2* eventmanager = nullptr;
 static IMDLCache* MDLCache = nullptr;
 
 static bool connected = false;
@@ -75,13 +75,13 @@ void CheckAsyncCacheDataType(MDLCacheDataType_t type, char* type_str) {
 }
 
 LUA_FUNCTION_STATIC(check_async) {
-	CheckAsyncCacheDataType(MDLCACHE_STUDIOHDR, "MDLCACHE_STUDIOHDR");
-	CheckAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, "MDLCACHE_STUDIOHWDATA");
-	CheckAsyncCacheDataType(MDLCACHE_VCOLLIDE, "MDLCACHE_VCOLLIDE");
-	CheckAsyncCacheDataType(MDLCACHE_ANIMBLOCK, "MDLCACHE_ANIMBLOCK");
-	CheckAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, "MDLCACHE_VIRTUALMODEL");
-	CheckAsyncCacheDataType(MDLCACHE_VERTEXES, "MDLCACHE_VERTEXES");
-	CheckAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, "MDLCACHE_DECODEDANIMBLOCK");
+	CheckAsyncCacheDataType(MDLCACHE_STUDIOHDR, (char*)"MDLCACHE_STUDIOHDR");
+	CheckAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, (char*)"MDLCACHE_STUDIOHWDATA");
+	CheckAsyncCacheDataType(MDLCACHE_VCOLLIDE, (char*)"MDLCACHE_VCOLLIDE");
+	CheckAsyncCacheDataType(MDLCACHE_ANIMBLOCK, (char*)"MDLCACHE_ANIMBLOCK");
+	CheckAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, (char*)"MDLCACHE_VIRTUALMODEL");
+	CheckAsyncCacheDataType(MDLCACHE_VERTEXES, (char*)"MDLCACHE_VERTEXES");
+	CheckAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, (char*)"MDLCACHE_DECODEDANIMBLOCK");
 
 	return 1;
 }
@@ -90,26 +90,26 @@ LUA_FUNCTION_STATIC(check_async) {
 GMOD_MODULE_OPEN()
 {
 	GlobalLUA = LUA;
-	gameeventmanager = (IGameEventManager2*)engine_loader.GetFactory()(INTERFACEVERSION_GAMEEVENTSMANAGER2, nullptr);
-	if (gameeventmanager == nullptr)
+	eventmanager = (IGameEventManager2*)engine_loader.GetFactory()(INTERFACEVERSION_GAMEEVENTSMANAGER2, nullptr);
+	if (eventmanager == nullptr)
 		LUA->ThrowError("unable to initialize IGameEventManager2");
 
 	MDLCache = (IMDLCache*)datacache_loader.GetFactory()(MDLCACHE_INTERFACE_VERSION, nullptr);
 	if (MDLCache == nullptr)
 		GlobalLUA->ThrowError("unable to initialize IMDLCache");
 
-	gameeventmanager->AddListener(DisconnectListener, "client_disconnect", false);
-	gameeventmanager->AddListener(ActivateListener, "player_activate", false);
+	eventmanager->AddListener(DisconnectListener, "client_disconnect", false);
+	eventmanager->AddListener(ActivateListener, "player_activate", false);
 
 	LuaPrint("[ClearCache] Successfully Loaded.");
 	
-	// AddAsyncCacheDataType(MDLCACHE_STUDIOHDR, "MDLCACHE_STUDIOHDR"); cannot be activated
-	AddAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, "MDLCACHE_STUDIOHWDATA");
-	AddAsyncCacheDataType(MDLCACHE_VCOLLIDE, "MDLCACHE_VCOLLIDE");
-	// AddAsyncCacheDataType(MDLCACHE_ANIMBLOCK, "MDLCACHE_ANIMBLOCK"); if activated, it breaks some playermodels
-	// AddAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, "MDLCACHE_VIRTUALMODEL"); cannot be activated
-	AddAsyncCacheDataType(MDLCACHE_VERTEXES, "MDLCACHE_VERTEXES");
-	// AddAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, "MDLCACHE_DECODEDANIMBLOCK"); cannot be activated
+	// AddAsyncCacheDataType(MDLCACHE_STUDIOHDR, (char*)"MDLCACHE_STUDIOHDR"); cannot be activated
+	AddAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, (char*)"MDLCACHE_STUDIOHWDATA");
+	AddAsyncCacheDataType(MDLCACHE_VCOLLIDE, (char*)"MDLCACHE_VCOLLIDE");
+	// AddAsyncCacheDataType(MDLCACHE_ANIMBLOCK, (char*)"MDLCACHE_ANIMBLOCK"); if activated, it breaks some playermodels
+	// AddAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, (char*)"MDLCACHE_VIRTUALMODEL"); cannot be activated
+	AddAsyncCacheDataType(MDLCACHE_VERTEXES, (char*)"MDLCACHE_VERTEXES");
+	// AddAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, (char*)"MDLCACHE_DECODEDANIMBLOCK"); cannot be activated
 
 	#if Cache_Debug == 1
 		LUA->GetField(-1, "engine");
