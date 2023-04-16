@@ -1,0 +1,83 @@
+name: Build Artifacts
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  windows:
+    strategy:
+      fail-fast: false
+
+    runs-on: windows-2019
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Checkout Garrysmod Common
+      uses: actions/checkout@v3
+      with:
+        repository: https://github.com/danielga/garrysmod_common
+        path: dependencies/garrysmod_common
+        submodules: recursive
+
+    - name: Find Visual Studio
+      run: |
+        $installationPath = Get-VSSetupInstance `
+          | Select-VSSetupInstance -Require Microsoft.VisualStudio.Workload.NativeDesktop -Latest `
+          | Select-Object -ExpandProperty InstallationPath
+        Write-Output "VSDEVCMD=${installationPath}\Common7\Tools\VsDevCmd.bat" `
+          | Out-File -FilePath "${Env:GITHUB_ENV}" -Append
+          
+    - name: Garrysmod Common build
+      run: |
+        Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("$env:BOOTSTRAP_URL"))
+        & "dependencies/garrysmod_common/build/build.ps1"
+
+    - name: Build MSVC x86
+      run: |
+        & "${Env:COMSPEC}" /s /c "`"${Env:VSDEVCMD}`" -arch=x86 -host_arch=x64 -no_logo && set" `
+          | % { , ($_ -Split '=', 2) } `
+          | % { [System.Environment]::SetEnvironmentVariable($_[0], $_[1]) }
+        devenv "gmod-clearcache\projects\windows\vs2022\clearcache.sln" /upgrade
+        msbuild "gmod-clearcache\projects\windows\vs2022\clearcache.sln" /nodeReuse:false /t:Rebuild /p:Configuration=Release /p:Platform=x86 /m /v:minimal
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: gmsv_clearcache_win32
+        path: ${{ matrix.source_branch }}/game
+        if-no-files-found: error
+
+  linux:
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+    container: registry.gitlab.steamos.cloud/steamrt/scout/sdk:latest
+    steps:
+    - name: Install Dependencies
+      run: |
+        dpkg --add-architecture i386
+        apt update
+        apt install -y build-essential git libstdc++6:i386 gcc-multilib g++-multilib
+
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Checkout Garrysmod Common
+      uses: actions/checkout@v3
+      with:
+        repository: https://github.com/danielga/garrysmod_common
+        path: dependencies/garrysmod_common
+        submodules: recursive
+
+    - name: Build GCC x86
+      working-directory: ${{ matrix.source_branch }}/src
+      run: |
+        dependencies/garrysmod_common/build/build.sh
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: gmsv_clearcache_linux32
+        path: ${{ matrix.source_branch }}/game
+        if-no-files-found: error
