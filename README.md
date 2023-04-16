@@ -7,11 +7,21 @@ Note: This Project uses [Garry's Mod Common](https://github.com/danielga/garrys
 1. You need to download the `gmsv_clearcache_win32.dll` from the latest [release](https://github.com/RaphaelIT7/gmod-clearcache/releases)  
 2. Move the `gmsv_clearcache_win32.dll` into your `garrysmod/lua/bin` folder.
 3. You need insert
+
+Windows:
 ```lua
 if file.Exists("lua/bin/gmsv_clearcache_win32.dll", "GAME") then
   require("clearcache")
 end
 ```
+
+Linux:
+```lua
+if file.Exists("lua/bin/gmsv_clearcache_linux.dll", "GAME") then
+  require("clearcache")
+end
+```
+
 Into the `garrysmod/lua/menu/menu.lua` file at the bottom.
 
 Note: If you change your Gmod branch or an update is made, your changes could get removed.
