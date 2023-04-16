@@ -15,7 +15,7 @@ jobs:
     - name: Checkout Garrysmod Common
       uses: actions/checkout@v3
       with:
-        repository: https://github.com/danielga/garrysmod_common
+        repository: danielga/garrysmod_common
         path: dependencies/garrysmod_common
         submodules: recursive
 
@@ -52,7 +52,7 @@ jobs:
       fail-fast: false
 
     runs-on: ubuntu-latest
-    container: registry.gitlab.steamos.cloud/steamrt/scout/sdk:latest
+    container: debian:bullseye
     steps:
     - name: Install Dependencies
       run: |
@@ -66,7 +66,7 @@ jobs:
     - name: Checkout Garrysmod Common
       uses: actions/checkout@v3
       with:
-        repository: https://github.com/danielga/garrysmod_common
+        repository: danielga/garrysmod_common
         path: dependencies/garrysmod_common
         submodules: recursive
 
