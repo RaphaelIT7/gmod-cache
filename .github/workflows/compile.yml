@@ -9,7 +9,7 @@ env:
   PROJECT_NAME: "clearcache"
   BUILD_64x: "false"
   REALM: "cl"
-  MENU: "true"
+  FINAL_REALM: "sv"
 
 jobs:
   build-linux:
@@ -39,11 +39,11 @@ jobs:
         make config=releasewithsymbols_x86_64
     - uses: actions/upload-artifact@v2
       with:
-        name: gm${{env.MENU == "false" && env.REALM || "sv"}}_${{env.PROJECT_NAME}}_linux.dll
+        name: gm${{env.FINAL_REALM}}_${{env.PROJECT_NAME}}_linux.dll
         path: projects/linux/gmake/x86/ReleaseWithSymbols/gm${{env.REALM}}_${{env.PROJECT_NAME}}_linux.dll
     - uses: actions/upload-artifact@v2
       with:
-        name: gm${{env.MENU == "false" && env.REALM || "sv"}}_${{env.PROJECT_NAME}}_linux64.dll
+        name: gm${{env.FINAL_REALM}}_${{env.PROJECT_NAME}}_linux64.dll
         path: projects/linux/gmake/x86_64/ReleaseWithSymbols/gm${{env.REALM}}_${{env.PROJECT_NAME}}_linux64.dll
   build-windows:
     runs-on: windows-2019
@@ -68,7 +68,7 @@ jobs:
         & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\msbuild.exe" /p:Configuration=ReleaseWithSymbols /p:Platform=Win32 ${{env.PROJECT_NAME}}.sln
     - uses: actions/upload-artifact@v2
       with:
-        name: gm${{env.MENU == "false" && env.REALM || "sv"}}_${{env.PROJECT_NAME}}_windows.dll
+        name: gm${{env.FINAL_REALM}}_${{env.PROJECT_NAME}}_windows.dll
         path: projects/windows/vs2019/x86/ReleaseWithSymbols/gm${{env.REALM}}_${{env.PROJECT_NAME}}_win32.dll
     - name: Build 64
       if: ${{env.BUILD_64x == "true"}}
@@ -78,5 +78,5 @@ jobs:
     - uses: actions/upload-artifact@v2
       if: ${{env.BUILD_64x == "true"}}
       with:
-        name: gm${{env.MENU == "false" && env.REALM || "sv"}}_${{env.PROJECT_NAME}}_win64.dll
+        name: gm${{env.FINAL_REALM}}_${{env.PROJECT_NAME}}_win64.dll
         path: projects/windows/vs2019/x86_64/ReleaseWithSymbols/gm${{env.REALM}}_${{env.PROJECT_NAME}}_win64.dll
