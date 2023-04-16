@@ -3,7 +3,7 @@
 #include "util.h"
 #include "GameEventListener.h"
 #include "datacache/imdlcache.h"
-#include "vstdlib/jobthread.h";
+#include "vstdlib/jobthread.h"
 
 #define Cache_Debug 0
 
@@ -101,7 +101,7 @@ GMOD_MODULE_OPEN()
 	eventmanager->AddListener(DisconnectListener, "client_disconnect", false);
 	eventmanager->AddListener(ActivateListener, "player_activate", false);
 
-	LuaPrint("[ClearCache] Successfully Loaded.");
+	LuaPrint((char*)"[ClearCache] Successfully Loaded.");
 	
 	// AddAsyncCacheDataType(MDLCACHE_STUDIOHDR, (char*)"MDLCACHE_STUDIOHDR"); cannot be activated
 	AddAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, (char*)"MDLCACHE_STUDIOHWDATA");
