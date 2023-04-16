@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gmcl_clearcache", "gmcl_clearcache.vcxproj", "{E27C9081-4E08-FE45-5719-813AC3235A46}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SourceSDK", "SourceSDK", "{FF11452E-6B9D-B2F2-74AE-35E7E0B80EF3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LZMA", "..\..\..\..\garrysmod_common\sourcesdk-minimal\projects\windows\vs2022\LZMA.vcxproj", "{5945887C-457C-890D-EE68-6F10DA7E050F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tier1", "..\..\..\..\garrysmod_common\sourcesdk-minimal\projects\windows\vs2022\tier1.vcxproj", "{EA6A6D10-567F-95C1-1F01-39218BD491F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "garrysmod_common", "garrysmod_common", "{2C3D1EE4-1837-4736-01A4-DD46ED3CADA2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "helpers", "..\..\..\..\garrysmod_common\projects\windows\vs2022\helpers.vcxproj", "{F8D0E23C-64B0-61D8-6DC8-ECAED926C839}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		ReleaseWithSymbols|Win32 = ReleaseWithSymbols|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E27C9081-4E08-FE45-5719-813AC3235A46}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E27C9081-4E08-FE45-5719-813AC3235A46}.Debug|Win32.Build.0 = Debug|Win32
+		{E27C9081-4E08-FE45-5719-813AC3235A46}.ReleaseWithSymbols|Win32.ActiveCfg = ReleaseWithSymbols|Win32
+		{E27C9081-4E08-FE45-5719-813AC3235A46}.ReleaseWithSymbols|Win32.Build.0 = ReleaseWithSymbols|Win32
+		{E27C9081-4E08-FE45-5719-813AC3235A46}.Release|Win32.ActiveCfg = Release|Win32
+		{E27C9081-4E08-FE45-5719-813AC3235A46}.Release|Win32.Build.0 = Release|Win32
+		{5945887C-457C-890D-EE68-6F10DA7E050F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5945887C-457C-890D-EE68-6F10DA7E050F}.Debug|Win32.Build.0 = Debug|Win32
+		{5945887C-457C-890D-EE68-6F10DA7E050F}.ReleaseWithSymbols|Win32.ActiveCfg = ReleaseWithSymbols|Win32
+		{5945887C-457C-890D-EE68-6F10DA7E050F}.ReleaseWithSymbols|Win32.Build.0 = ReleaseWithSymbols|Win32
+		{5945887C-457C-890D-EE68-6F10DA7E050F}.Release|Win32.ActiveCfg = Release|Win32
+		{5945887C-457C-890D-EE68-6F10DA7E050F}.Release|Win32.Build.0 = Release|Win32
+		{EA6A6D10-567F-95C1-1F01-39218BD491F2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EA6A6D10-567F-95C1-1F01-39218BD491F2}.Debug|Win32.Build.0 = Debug|Win32
+		{EA6A6D10-567F-95C1-1F01-39218BD491F2}.ReleaseWithSymbols|Win32.ActiveCfg = ReleaseWithSymbols|Win32
+		{EA6A6D10-567F-95C1-1F01-39218BD491F2}.ReleaseWithSymbols|Win32.Build.0 = ReleaseWithSymbols|Win32
+		{EA6A6D10-567F-95C1-1F01-39218BD491F2}.Release|Win32.ActiveCfg = Release|Win32
+		{EA6A6D10-567F-95C1-1F01-39218BD491F2}.Release|Win32.Build.0 = Release|Win32
+		{F8D0E23C-64B0-61D8-6DC8-ECAED926C839}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F8D0E23C-64B0-61D8-6DC8-ECAED926C839}.Debug|Win32.Build.0 = Debug|Win32
+		{F8D0E23C-64B0-61D8-6DC8-ECAED926C839}.ReleaseWithSymbols|Win32.ActiveCfg = ReleaseWithSymbols|Win32
+		{F8D0E23C-64B0-61D8-6DC8-ECAED926C839}.ReleaseWithSymbols|Win32.Build.0 = ReleaseWithSymbols|Win32
+		{F8D0E23C-64B0-61D8-6DC8-ECAED926C839}.Release|Win32.ActiveCfg = Release|Win32
+		{F8D0E23C-64B0-61D8-6DC8-ECAED926C839}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5945887C-457C-890D-EE68-6F10DA7E050F} = {FF11452E-6B9D-B2F2-74AE-35E7E0B80EF3}
+		{EA6A6D10-567F-95C1-1F01-39218BD491F2} = {FF11452E-6B9D-B2F2-74AE-35E7E0B80EF3}
+		{F8D0E23C-64B0-61D8-6DC8-ECAED926C839} = {2C3D1EE4-1837-4736-01A4-DD46ED3CADA2}
+	EndGlobalSection
+EndGlobal
