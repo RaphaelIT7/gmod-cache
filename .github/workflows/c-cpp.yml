@@ -41,7 +41,6 @@ jobs:
     - name: Garrysmod Common build
       run: |
         Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("${{env.WIN_BOOTSTRAP_URL}}"))
-        & "dependencies/garrysmod_common/build/build.ps1"
         
     - name: Premake
       run: |
