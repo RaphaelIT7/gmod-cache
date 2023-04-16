@@ -10,7 +10,6 @@
 static SourceSDK::FactoryLoader engine_loader("engine");
 static SourceSDK::FactoryLoader datacache_loader("datacache");
 
-static IGameEventManager2* eventmanager = nullptr;
 static IMDLCache* MDLCache = nullptr;
 
 static bool connected = false;
@@ -90,16 +89,16 @@ LUA_FUNCTION_STATIC(check_async) {
 GMOD_MODULE_OPEN()
 {
 	GlobalLUA = LUA;
-	eventmanager = (IGameEventManager2*)engine_loader.GetFactory()(INTERFACEVERSION_GAMEEVENTSMANAGER2, nullptr);
-	if (eventmanager == nullptr)
+	gameeventmanager = (IGameEventManager2*)engine_loader.GetFactory()(INTERFACEVERSION_GAMEEVENTSMANAGER2, nullptr);
+	if (gameeventmanager == nullptr)
 		LUA->ThrowError("unable to initialize IGameEventManager2");
 
 	MDLCache = (IMDLCache*)datacache_loader.GetFactory()(MDLCACHE_INTERFACE_VERSION, nullptr);
 	if (MDLCache == nullptr)
 		GlobalLUA->ThrowError("unable to initialize IMDLCache");
 
-	eventmanager->AddListener(DisconnectListener, "client_disconnect", false);
-	eventmanager->AddListener(ActivateListener, "player_activate", false);
+	gameeventmanager->AddListener(DisconnectListener, "client_disconnect", false);
+	gameeventmanager->AddListener(ActivateListener, "player_activate", false);
 
 	LuaPrint((char*)"[ClearCache] Successfully Loaded.");
 	
