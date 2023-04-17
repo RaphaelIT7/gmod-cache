@@ -36,6 +36,7 @@ public:
 		if (connected) 
 		{
 			CreateSimpleThread(ClearCache, nullptr);
+			connected = false;
 		}
 	}
 };
@@ -51,6 +52,7 @@ public:
 		connected = true;
 	}
 };
+
 static ActivateEventListener* ActivateListener = new ActivateEventListener;
 static DisconnectEventListener* DisconnectListener = new DisconnectEventListener;
 void AddAsyncCacheDataType(MDLCacheDataType_t type, char* type_str) {
