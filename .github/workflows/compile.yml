@@ -5,7 +5,7 @@ on: [push, pull_request, workflow_dispatch]
 env:
   PROJECT_NAME: "clearcache"
   BUILD_64x: "false"
-  REALM: "cl"
+  REALM: "sv"
   FINAL_REALM: "sv"
 
 jobs:

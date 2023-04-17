@@ -18,7 +18,7 @@ CreateWorkspace({name = "clearcache", abi_compatible = false})
     -- Can define "manual_files", which allows you to manually add files to the project,
     -- instead of automatically including them from the "source_path"
     -- Can also define "abi_compatible", for project specific compatibility
-    CreateProject({serverside = false, manual_files = false})
+    CreateProject({serverside = true, manual_files = false})
         -- Remove some or all of these includes if they're not needed
         --IncludeLuaShared()
         IncludeSDKCommon()
