@@ -6,16 +6,16 @@
 #include "datacache/idatacache.h"
 #include "vstdlib/jobthread.h"
 
-#define Cache_Debug 0;
-#define Cache_UseNotify 0; // Set this to 1 if you want to use a Cache instead of clearing the whole cache each time. This can cause the lightning on some models to break!
-#define Cache_AwaysFlush 0; // Enable this if you want to clear the cache every time you disconnect from a server. This can cause crashes!
-#define Cache_Experimental 0; // Enable this to enable features that are in development like clearing the Materials too. (This is Experimental)
+#define Cache_Debug 0
+#define Cache_UseNotify 0 // Set this to 1 if you want to use a Cache instead of clearing the whole cache each time. This can cause the lightning on some models to break!
+#define Cache_AwaysFlush 0 // Enable this if you want to clear the cache every time you disconnect from a server. This can cause crashes!
+#define Cache_Experimental 0 // Enable this to enable features that are in development like clearing the Materials too. (This is Experimental)
 
-#if Cache_UseNotify == 1;
+#if Cache_UseNotify == 1
 	#include <unordered_map>
 #endif 
 
-#if Cache_Experimental == 1;
+#if Cache_Experimental == 1
 	#include <unordered_map>
 	#include "materialsystem/imaterialsystem.h"
 #endif
@@ -323,10 +323,10 @@ LUA_FUNCTION_STATIC(cache_flush) {
 		#endif
 		CreateSimpleThread(ClearCache, vars);
 
-		LuaPrint("[Cache] Flush begins in " + std::to_string(vars->delay / 1000) + " second!");
+		LuaPrint((char*)"[Cache] Flush begins in " + std::to_string(vars->delay / 1000) + " second!");
 	}
 	else {
-		LuaPrint("[Cache] You cannot flush the Cache if you are connected to a Server!");
+		LuaPrint((char*)"[Cache] You cannot flush the Cache if you are connected to a Server!");
 	}
 
 	return 1;
