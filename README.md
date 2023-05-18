@@ -4,8 +4,8 @@ It also activates Async Load for some DataTypes. (`MDLCACHE_STUDIOHWDATA`, `MDLC
 Note: This Project uses [Garry's Mod Common](https://github.com/danielga/garrysmod_common)
 
 ## How to Install
-1. You need to download the `gmsv_clearcache_win32.dll` from the latest [release](https://github.com/RaphaelIT7/gmod-clearcache/releases)  
-2. Move the `gmsv_clearcache_win32.dll` into your `garrysmod/lua/bin` folder.
+1. You need to download the `gmsv_cache_win32.dll` from the latest [release](https://github.com/RaphaelIT7/gmod-clearcache/releases)  
+2. Move the `gmsv_cache_win32.dll` into your `garrysmod/lua/bin` folder.
 3. You need insert
 
 Windows:
