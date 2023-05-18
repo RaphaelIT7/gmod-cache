@@ -10,15 +10,15 @@ Note: This Project uses [Garry's Mod Common](https://github.com/danielga/garrys
 
 Windows:
 ```lua
-if file.Exists("lua/bin/gmsv_clearcache_win32.dll", "GAME") then
-  require("clearcache")
+if file.Exists("lua/bin/gmsv_cache_win32.dll", "GAME") then
+  require("cache")
 end
 ```
 
 Linux:
 ```lua
-if file.Exists("lua/bin/gmsv_clearcache_linux.dll", "GAME") then
-  require("clearcache")
+if file.Exists("lua/bin/gmsv_cache_linux.dll", "GAME") then
+  require("cache")
 end
 ```
 
