@@ -3,6 +3,20 @@ It also activates Async Load for some DataTypes. (`MDLCACHE_STUDIOHWDATA`, `MDLC
 
 Note: This Project uses [Garry's Mod Common](https://github.com/danielga/garrysmod_common)
 
+## Current Status
+Bugs:  
+- Content from Addons also get unloaded.
+- Playermodel sometimes break
+
+What I'm currently working on:  
+- Cleaning up the entire code
+- providing some functions to the menu state and client state.
+- Better Cache handling
+  - Try to only unload Map content first
+  - Try to only unload Content downloaded by the Server.
+  - Try not to unload Content from Addons
+  - Add some type of tag that allows a server to stop the cache / tell the cache to not unload Content.
+
 ## How to Install
 1. You need to download the `gmsv_cache_win32.dll` from the latest [release](https://github.com/RaphaelIT7/gmod-clearcache/releases)  
 2. Move the `gmsv_cache_win32.dll` into your `garrysmod/lua/bin` folder.
