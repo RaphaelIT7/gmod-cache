@@ -9,8 +9,6 @@ Bugs:
 - Playermodel sometimes break
 
 What I'm currently working on:  
-- Cleaning up the entire code
-- providing some functions to the menu state and client state.
 - Better Cache handling
   - Try to only unload Map content first
   - Try to only unload Content downloaded by the Server.
@@ -61,3 +59,28 @@ graph TD;
     connect-->cache_check[The cache checks if it's the same map by\ncomparing the saved Mapname with the Mapname of the Server]
     cache_check-- If it's not the same Map, clear the Cache\nIf it's the same Map, do nothing -->connect
 ```
+
+## Next Update
+[+] Added LUA API
+[#] Cleaned up the Code
+[#] Small problems fixed
+
+--- MDLCACHE_ Types ---
+MDLCACHE_STUDIOHDR = 1
+MDLCACHE_STUDIOHWDATA = 2
+MDLCACHE_VCOLLIDE = 3
+MDLCACHE_ANIMBLOCK = 4
+MDLCACHE_VIRTUALMODEL = 5
+MDLCACHE_VERTEXES = 6
+MDLCACHE_DECODEDANIMBLOCK = 7
+
+--- Menu State ---
+void cache.Flush() Call this if you want to flush the cache.
+bool cache.GetAsync() retuns a bool if the given MDLCACHE type is Async.
+bool cache.SetAsync(int MDLCACHE_[any], bool enabled) Enables Async for the given type. retuns a bool if the given MDLCACHE type has Async enabled. Some types can fail or cause problems!
+void cache.ShouldClear(string IP, bool clear) When the clients joins the given IP, the cache will be cleared if you want it to. (You can only controll the Cache for 1 IP!)
+
+--- Client State ---
+bool cache.GetAsync() retuns a bool if the given MDLCACHE type is Async.
+bool cache.SetAsync(int MDLCACHE_[any], bool enabled) Enables Async for the given type. retuns a bool if the given MDLCACHE type has Async enabled. Some types can fail or cause problems!
+void cache.ShouldClear(string IP, bool clear) When the clients joins the given IP, the cache will be cleared if you want it to. (You can only controll the Cache for 1 IP!)
