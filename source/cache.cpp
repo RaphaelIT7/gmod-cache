@@ -159,7 +159,13 @@ void CacheMgr::Connect(IGameEvent* event)
 	const char* address = event->GetString("address");
 	const char* map = event->GetString("mapname");
 	if (strcmp(this->last_server, "") == 1 && strcmp(this->last_map, map) == 1) {
-		this->Flush(0, false, false, true);
+		if (strcmp(this->address, address) == 0) {
+			if (this->clear_on_connect) {
+				this->Flush(0, false, false, true);
+			}
+		} else {
+			this->Flush(0, false, false, true);
+		}
 	}
 
 	this->last_server = strdup(address);
