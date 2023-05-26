@@ -41,7 +41,4 @@ CreateWorkspace({name = "cache", abi_compatible = false})
             files({"source/posix/*.cpp", "source/posix/*.hpp"})
                 filter "system:linux"
 
-                links -- This fixes the undefined reference to `dlopen' errors.
-                {
-                    "dl",
-                }
+                table.insert(links, "dl") -- This fixes the undefined reference to `dlopen' errors.
