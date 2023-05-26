@@ -11,6 +11,7 @@ newoption({
 local gmcommon = assert(_OPTIONS.gmcommon or os.getenv("GARRYSMOD_COMMON"),
     "you didn't provide a path to your garrysmod_common (https://github.com/danielga/garrysmod_common) directory")
 include(gmcommon)
+IncludeHelpersExtended()
 
 CreateWorkspace({name = "cache", abi_compatible = false})
     -- Serverside module (gmsv prefix)
@@ -38,3 +39,9 @@ CreateWorkspace({name = "cache", abi_compatible = false})
 
         filter("system:linux or macosx")
             files({"source/posix/*.cpp", "source/posix/*.hpp"})
+                filter "system:linux"
+
+                links // this fixes the undefined reference to `dlopen' errors.
+                {
+                    "dl",
+                }

@@ -11,9 +11,16 @@ env:
 jobs:
   build-linux:
     runs-on: ubuntu-latest
+    container: debian:bullseye
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/checkout@v2
+    - name: Install Dependencies
+      run: |
+        dpkg --add-architecture i386
+        apt update
+        apt install -y build-essential git libstdc++6:i386 gcc-multilib g++-multilib wget
+    
+    - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
         repository: danielga/garrysmod_common
@@ -23,9 +30,7 @@ jobs:
     - name: Install Premake
       run: |
         wget https://github.com/danielga/garrysmod_common/releases/download/premake-build%2F5.0.0-beta2/premake-5.0.0-beta2-linux.tar.gz -O premake.tar.gz
-        sudo tar -xvf premake.tar.gz --directory=/usr/bin
-        sudo apt-get update
-        sudo apt-get install g++-multilib
+        tar -xvf premake.tar.gz --directory=/usr/bin
         gcc --version
 
     - name: Generate Project
