@@ -99,7 +99,7 @@ void LUA_InitMenu(GarrysMod::Lua::ILuaBase* LUA) {
 		Add_Func(LUA, cache_flush, "Flush");
 		Add_Func(LUA, cache_setasync, "SetAsync");
 		Add_Func(LUA, cache_getasync, "GetAsync");
-  Add_Func(LUA, cache_ckeckasync, "CheckAsync");
+  Add_Func(LUA, cache_checkasync, "CheckAsync");
 		Add_Func(LUA, cache_shouldclear, "ShouldClear");
 	Finish_Table(LUA, "cache");
 
