@@ -8,7 +8,7 @@ GarrysMod::Lua::ILuaBase* ClientLUA;
 CacheMgr* Cache;
 
 // should never be used outside of main thread!!! what happends: memory access violation
-void LuaPrint(char* Text) {
+void LuaPrint(const char* Text) {
 	GlobalLUA->PushSpecial(GarrysMod::Lua::SPECIAL_GLOB);
 		GlobalLUA->GetField(-1, "print");
 		GlobalLUA->PushString(Text);
@@ -26,7 +26,7 @@ void LuaPrint(std::string Text) {
 }
 
 // should never be used outside of main thread!!! what happends: memory access violation
-void LuaPrint(char* Text, GarrysMod::Lua::ILuaBase* LUA) {
+void LuaPrint(const char* Text, GarrysMod::Lua::ILuaBase* LUA) {
 	LUA->PushSpecial(GarrysMod::Lua::SPECIAL_GLOB);
 		LUA->GetField(-1, "print");
 		LUA->PushString(Text);
@@ -48,7 +48,7 @@ void Start_Table(GarrysMod::Lua::ILuaBase* LUA) {
 	LUA->CreateTable();
 }
 
-void Add_Func(GarrysMod::Lua::ILuaBase* LUA, CFunc Func, char* Name) {
+void Add_Func(GarrysMod::Lua::ILuaBase* LUA, CFunc Func, const char* Name) {
 	LUA->PushCFunction(Func);
 	LUA->SetField(-2, Name);
 }
@@ -58,7 +58,7 @@ void Add_Func(GarrysMod::Lua::ILuaBase* LUA, CFunc Func, std::string Name) {
 	LUA->SetField(-2, Name.c_str());
 }
 
-void Finish_Table(GarrysMod::Lua::ILuaBase* LUA, char* Name) {
+void Finish_Table(GarrysMod::Lua::ILuaBase* LUA, const char* Name) {
 	LUA->SetField(-2, Name);
 	LUA->Pop();
 }
