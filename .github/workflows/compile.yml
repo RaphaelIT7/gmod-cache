@@ -4,7 +4,7 @@ on: [push, pull_request, workflow_dispatch]
   
 env:
   PROJECT_NAME: "cache"
-  BUILD_64x: "false"
+  BUILD_64x: "true"
   REALM: "sv"
   FINAL_REALM: "sv"
 
