@@ -13,17 +13,17 @@ extern GarrysMod::Lua::ILuaBase* ClientLUA;
 
 extern CacheMgr* Cache;
 
-extern void LuaPrint(char*);
+extern void LuaPrint(const char*);
 extern void LuaPrint(std::string);
-extern void LuaPrint(char*, GarrysMod::Lua::ILuaBase*);
+extern void LuaPrint(const char*, GarrysMod::Lua::ILuaBase*);
 extern void LuaPrint(std::string, GarrysMod::Lua::ILuaBase*);
 
 extern void Start_Table(GarrysMod::Lua::ILuaBase*);
 
-extern void Add_Func(GarrysMod::Lua::ILuaBase*, CFunc, char*);
+extern void Add_Func(GarrysMod::Lua::ILuaBase*, CFunc, const char*);
 extern void Add_Func(GarrysMod::Lua::ILuaBase*, CFunc, std::string);
 
-extern void Finish_Table(GarrysMod::Lua::ILuaBase*, char*);
+extern void Finish_Table(GarrysMod::Lua::ILuaBase*, const char*);
 extern void Finish_Table(GarrysMod::Lua::ILuaBase*, std::string);
 
 extern void ThrowError(const char*);
@@ -39,7 +39,7 @@ class CLuaShared
 {
 public:
 	virtual ~CLuaShared() = 0;
-	virtual int Init(char*, char*, void*, void*) = 0;
+	virtual int Init(const char*, const char*, void*, void*) = 0;
 	virtual int Shutdown(void) = 0;
 	virtual int DumpStats(void) = 0;
 	virtual GarrysMod::Lua::ILuaBase* CreateLuaInterface(int, bool) = 0;
