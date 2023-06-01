@@ -7,16 +7,17 @@ static SourceSDK::FactoryLoader luashared_loader("lua_shared");
 LUA_FUNCTION_STATIC(cache_checkasync) {
 	LUA->CheckType(1, GarrysMod::Lua::Type::Bool);
 	bool print = LUA->GetBool(1);
+ 
+LUA->CreateTable();
+LUA->PushBool(Cache->GetAsyncCacheDataType(MDLCACHE_STUDIOHDR, print, "MDLCACHE_STUDIOHDR"));
+	LUA->PushBool(Cache->GetAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, print,"MDLCACHE_STUDIOHWDATA"));
+	LUA->PushBool(Cache->GetAsyncCacheDataType(MDLCACHE_VCOLLIDE, print, "MDLCACHE_VCOLLIDE"));
+	LUA->PushBool(Cache->GetAsyncCacheDataType(MDLCACHE_ANIMBLOCK, print, "MDLCACHE_ANIMBLOCK"));
+	LUA->PushBool(Cache->GetAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, print, "MDLCACHE_VIRTUALMODEL"));
+	LUA->PushBool(Cache->GetAsyncCacheDataType(MDLCACHE_VERTEXES, print, "MDLCACHE_VERTEXES"));
+	LUA->PushBool(Cache->GetAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, print, "MDLCACHE_DECODEDANIMBLOCK"));
 
-	Cache->GetAsyncCacheDataType(MDLCACHE_STUDIOHDR, print, "MDLCACHE_STUDIOHDR");
-	Cache->GetAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, print,"MDLCACHE_STUDIOHWDATA");
-	Cache->GetAsyncCacheDataType(MDLCACHE_VCOLLIDE, print, "MDLCACHE_VCOLLIDE");
-	Cache->GetAsyncCacheDataType(MDLCACHE_ANIMBLOCK, print, "MDLCACHE_ANIMBLOCK");
-	Cache->GetAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, print, "MDLCACHE_VIRTUALMODEL");
-	Cache->GetAsyncCacheDataType(MDLCACHE_VERTEXES, print, "MDLCACHE_VERTEXES");
-	Cache->GetAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, print, "MDLCACHE_DECODEDANIMBLOCK");
-
-	return 0;
+	return 7;
 }
 
 LUA_FUNCTION_STATIC(cache_setasync) 
@@ -98,6 +99,7 @@ void LUA_InitMenu(GarrysMod::Lua::ILuaBase* LUA) {
 		Add_Func(LUA, cache_flush, "Flush");
 		Add_Func(LUA, cache_setasync, "SetAsync");
 		Add_Func(LUA, cache_getasync, "GetAsync");
+  Add_Func(LUA, cache_ckeckasync, "CheckAsync");
 		Add_Func(LUA, cache_shouldclear, "ShouldClear");
 	Finish_Table(LUA, "cache");
 
