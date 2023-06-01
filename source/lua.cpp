@@ -8,13 +8,13 @@ LUA_FUNCTION_STATIC(cache_checkasync) {
 	LUA->CheckType(1, GarrysMod::Lua::Type::Bool);
 	bool print = LUA->GetBool(1);
 
-	Cache->GetAsyncCacheDataType(MDLCACHE_STUDIOHDR, print, (char*)"MDLCACHE_STUDIOHDR");
-	Cache->GetAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, print,(char*)"MDLCACHE_STUDIOHWDATA");
-	Cache->GetAsyncCacheDataType(MDLCACHE_VCOLLIDE, print, (char*)"MDLCACHE_VCOLLIDE");
-	Cache->GetAsyncCacheDataType(MDLCACHE_ANIMBLOCK, print, (char*)"MDLCACHE_ANIMBLOCK");
-	Cache->GetAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, print, (char*)"MDLCACHE_VIRTUALMODEL");
-	Cache->GetAsyncCacheDataType(MDLCACHE_VERTEXES, print, (char*)"MDLCACHE_VERTEXES");
-	Cache->GetAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, print, (char*)"MDLCACHE_DECODEDANIMBLOCK");
+	Cache->GetAsyncCacheDataType(MDLCACHE_STUDIOHDR, print, "MDLCACHE_STUDIOHDR");
+	Cache->GetAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, print,"MDLCACHE_STUDIOHWDATA");
+	Cache->GetAsyncCacheDataType(MDLCACHE_VCOLLIDE, print, "MDLCACHE_VCOLLIDE");
+	Cache->GetAsyncCacheDataType(MDLCACHE_ANIMBLOCK, print, "MDLCACHE_ANIMBLOCK");
+	Cache->GetAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, print, "MDLCACHE_VIRTUALMODEL");
+	Cache->GetAsyncCacheDataType(MDLCACHE_VERTEXES, print, "MDLCACHE_VERTEXES");
+	Cache->GetAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, print, "MDLCACHE_DECODEDANIMBLOCK");
 
 	return 0;
 }
@@ -43,9 +43,9 @@ LUA_FUNCTION_STATIC(cache_getasync)
 
 LUA_FUNCTION_STATIC(cache_flush) {
 	if (Cache->Flush(1000, true, true, false)) {
-		LuaPrint((char*)"[Cache] Flush begins in 1 second!");
+		LuaPrint("[Cache] Flush begins in 1 second!");
 	} else {
-		LuaPrint((char*)"[Cache] You cannot flush the Cache if you are connected to a Server!");
+		LuaPrint("[Cache] You cannot flush the Cache if you are connected to a Server!");
 	}
 
 	return 0;
@@ -95,11 +95,11 @@ void LUA_InitMenu(GarrysMod::Lua::ILuaBase* LUA) {
 	//LUA->Pop();
 
 	Start_Table(LUA);
-		Add_Func(LUA, cache_flush, (char*)"Flush");
-		Add_Func(LUA, cache_setasync, (char*)"SetAsync");
-		Add_Func(LUA, cache_getasync, (char*)"GetAsync");
-		Add_Func(LUA, cache_shouldclear, (char*)"ShouldClear");
-	Finish_Table(LUA, (char*)"cache");
+		Add_Func(LUA, cache_flush, "Flush");
+		Add_Func(LUA, cache_setasync, "SetAsync");
+		Add_Func(LUA, cache_getasync, "GetAsync");
+		Add_Func(LUA, cache_shouldclear, "ShouldClear");
+	Finish_Table(LUA, "cache");
 
 	LUA->PushSpecial(SPECIAL_GLOB);
 		LUA->PushNumber(1);
@@ -118,7 +118,7 @@ void LUA_InitMenu(GarrysMod::Lua::ILuaBase* LUA) {
 		LUA->SetField(-2, "MDLCACHE_DECODEDANIMBLOCK");
 	LUA->Pop();
 
-	LuaPrint((char*)"[Cache] Successfully Loaded.");
+	LuaPrint("[Cache] Successfully Loaded.");
 }
 
 static bool Init = false;
@@ -152,12 +152,12 @@ void LUA_InitClient(GarrysMod::Lua::ILuaBase* LUA) {
 	LUA->Pop();
 
 	Start_Table(LUA);
-		Add_Func(LUA, cache_setasync, (char*)"SetAsync");
-		Add_Func(LUA, cache_getasync, (char*)"GetAsync");
+		Add_Func(LUA, cache_setasync, "SetAsync");
+		Add_Func(LUA, cache_getasync, "GetAsync");
 		Add_Func(LUA, cache_shouldclear, "ShouldClear");
-	Finish_Table(LUA, (char*)"cache");
+	Finish_Table(LUA, "cache");
 
-	LuaPrint((char*)"[Cache] Successfully added client functions.");
+	LuaPrint("[Cache] Successfully added client functions.");
 
 	Init = true;
 }
