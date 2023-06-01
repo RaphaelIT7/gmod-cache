@@ -21,7 +21,7 @@ extern void LuaPrint(std::string, GarrysMod::Lua::ILuaBase*);
 extern void Start_Table(GarrysMod::Lua::ILuaBase*);
 
 extern void Add_Func(GarrysMod::Lua::ILuaBase*, CFunc, char*);
-// extern void Add_Func(GarrysMod::Lua::ILuaBase*, CFunc, std::string);
+extern void Add_Func(GarrysMod::Lua::ILuaBase*, CFunc, std::string);
 
 extern void Finish_Table(GarrysMod::Lua::ILuaBase*, char*);
 extern void Finish_Table(GarrysMod::Lua::ILuaBase*, std::string);
