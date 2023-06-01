@@ -95,11 +95,11 @@ void LUA_InitMenu(GarrysMod::Lua::ILuaBase* LUA) {
 	//LUA->Pop();
 
 	Start_Table(LUA);
-		Add_Func(LUA, cache_flush, "Flush");
-		Add_Func(LUA, cache_setasync, "SetAsync");
-		Add_Func(LUA, cache_getasync, "GetAsync");
-		Add_Func(LUA, cache_shouldclear, "ShouldClear");
-	Finish_Table(LUA, "cache");
+		Add_Func(LUA, cache_flush, (char*)"Flush");
+		Add_Func(LUA, cache_setasync, (char*)"SetAsync");
+		Add_Func(LUA, cache_getasync, (char*)"GetAsync");
+		Add_Func(LUA, cache_shouldclear, (char*)"ShouldClear");
+	Finish_Table(LUA, (char*)"cache");
 
 	LUA->PushSpecial(SPECIAL_GLOB);
 		LUA->PushNumber(1);
@@ -152,10 +152,10 @@ void LUA_InitClient(GarrysMod::Lua::ILuaBase* LUA) {
 	LUA->Pop();
 
 	Start_Table(LUA);
-		Add_Func(LUA, cache_setasync, "SetAsync");
-		Add_Func(LUA, cache_getasync, "GetAsync");
+		Add_Func(LUA, cache_setasync, (char*)"SetAsync");
+		Add_Func(LUA, cache_getasync, (char*)"GetAsync");
 		Add_Func(LUA, cache_shouldclear, "ShouldClear");
-	Finish_Table(LUA, "cache");
+	Finish_Table(LUA, (char*)"cache");
 
 	LuaPrint((char*)"[Cache] Successfully added client functions.");
 
