@@ -45,10 +45,10 @@ public:
 	void Disconnect();
 	
 	bool SetAsyncCacheDataType(MDLCacheDataType_t, bool);
-	bool SetAsyncCacheDataType(MDLCacheDataType_t, bool, bool, char*);
+	bool SetAsyncCacheDataType(MDLCacheDataType_t, bool, bool, const char*);
 
 	bool GetAsyncCacheDataType(MDLCacheDataType_t);
-	bool GetAsyncCacheDataType(MDLCacheDataType_t, bool, char*);
+	bool GetAsyncCacheDataType(MDLCacheDataType_t, bool, const char*);
 
 	void SetClearOnConnect(const char*, bool); // Give an address of an server the client should or should not clear the cache when he connects to it. SetClearOnConnect("localhost", true) This will clear the cache when the client connects into a singleplayer game.
 };
