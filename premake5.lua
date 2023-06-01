@@ -39,3 +39,6 @@ CreateWorkspace({name = "cache", abi_compatible = false})
 
         filter("system:linux or macosx")
             files({"source/posix/*.cpp", "source/posix/*.hpp"})
+                filter "system:linux"
+
+                links({"dl", "pthread"})
