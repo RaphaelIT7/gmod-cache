@@ -203,7 +203,7 @@ bool CacheMgr::SetAsyncCacheDataType(MDLCacheDataType_t type, bool enabled) {
 	return this->SetAsyncCacheDataType(type, enabled, false, "");
 }
 
-bool CacheMgr::SetAsyncCacheDataType(MDLCacheDataType_t type, bool enabled, bool print, char* type_str) {
+bool CacheMgr::SetAsyncCacheDataType(MDLCacheDataType_t type, bool enabled, bool print, const char* type_str) {
 	MDLCache->SetAsyncLoad(type, enabled);
 
 	bool worked = MDLCache->GetAsyncLoad(type);
@@ -221,7 +221,7 @@ bool CacheMgr::GetAsyncCacheDataType(MDLCacheDataType_t type) {
 	return this->GetAsyncCacheDataType(type, false, "");
 }
 
-bool CacheMgr::GetAsyncCacheDataType(MDLCacheDataType_t type, bool print, char* type_str) {
+bool CacheMgr::GetAsyncCacheDataType(MDLCacheDataType_t type, bool print, const char* type_str) {
 	bool async = MDLCache->GetAsyncLoad(type);
 	if (print && !async) {
 		std::string msg = "Failed to enable AsyncLoad for type ";
@@ -287,11 +287,11 @@ CacheMgr::CacheMgr()
 		MDLCache->SetCacheNotify(cacheupdate);
 	#endif
 
-	// this->SetAsyncCacheDataType(MDLCACHE_STUDIOHDR, true, false,  (char*)"MDLCACHE_STUDIOHDR"); cannot be activated
-	this->SetAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, true, false, (char*)"MDLCACHE_STUDIOHWDATA");
-	this->SetAsyncCacheDataType(MDLCACHE_VCOLLIDE, true, false, (char*)"MDLCACHE_VCOLLIDE");
-	// this->SetAsyncCacheDataType(MDLCACHE_ANIMBLOCK, true, false,  (char*)"MDLCACHE_ANIMBLOCK"); if activated, it breaks some playermodels
-	// this->SetAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, true, false,  (char*)"MDLCACHE_VIRTUALMODEL"); cannot be activated
-	this->SetAsyncCacheDataType(MDLCACHE_VERTEXES, true, false, (char*)"MDLCACHE_VERTEXES");
-	// this->SetAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, true, false,  (char*)"MDLCACHE_DECODEDANIMBLOCK"); cannot be activated
+	// this->SetAsyncCacheDataType(MDLCACHE_STUDIOHDR, true, false, "MDLCACHE_STUDIOHDR"); cannot be activated
+	this->SetAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, true, false, "MDLCACHE_STUDIOHWDATA");
+	this->SetAsyncCacheDataType(MDLCACHE_VCOLLIDE, true, false, "MDLCACHE_VCOLLIDE");
+	// this->SetAsyncCacheDataType(MDLCACHE_ANIMBLOCK, true, false, "MDLCACHE_ANIMBLOCK"); if activated, it breaks some playermodels
+	// this->SetAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, true, false, "MDLCACHE_VIRTUALMODEL"); cannot be activated
+	this->SetAsyncCacheDataType(MDLCACHE_VERTEXES, true, false, "MDLCACHE_VERTEXES");
+	// this->SetAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, true, false, "MDLCACHE_DECODEDANIMBLOCK"); cannot be activated
 }
