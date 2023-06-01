@@ -156,10 +156,10 @@ unsigned ClearCache(void* params) {
 void CacheMgr::Connect(IGameEvent* event)
 {
 #if Cache_AwaysFlush == 0 // We don't need to clear the Cache because it got already cleared when the client disconnected from the server if Cache_AwaysFlush is enabled.
-	const char* address = event->GetString("address");
-	const char* map = event->GetString("mapname");
-	if (strcmp(this->last_server, "") == 1 && strcmp(this->last_map, map) == 1) {
-		if (strcmp(this->address, address) == 0) {
+	const char* new_address = event->GetString("address");
+	const char* new_map = event->GetString("mapname");
+	if (strcmp(this->last_server, "") == 1 && strcmp(this->last_map, new_map) == 1) {
+		if (strcmp(this->address, new_address) == 0) {
 			if (this->clear_on_connect) {
 				this->Flush(0, false, false, true);
 			}
@@ -168,8 +168,8 @@ void CacheMgr::Connect(IGameEvent* event)
 		}
 	}
 
-	this->last_server = strdup(address);
-	this->last_map = strdup(map);
+	this->last_server = strdup(new_address);
+	this->last_map = strdup(new_map);
 #endif
 
 #if Cache_Experimental == 1
