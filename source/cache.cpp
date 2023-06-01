@@ -250,7 +250,7 @@ bool CacheMgr::Flush(int delay, bool full, bool threaded, bool force)
 		#endif
 
 		if (threaded) {
-			CreateSimpleThread(ClearCache, vars);
+			CreateSimpleThread((ThreadFunc_t*)ClearCache, vars);
 		} else {
 			ClearCache(vars);
 		}
