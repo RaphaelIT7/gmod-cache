@@ -261,9 +261,9 @@ bool CacheMgr::Flush(int delay, bool full, bool threaded, bool force)
 	}
 }
 
-void CacheMgr::SetClearOnConnect(const char* address, bool clear)
+void CacheMgr::SetClearOnConnect(const char* new_address, bool clear)
 {
-	this->address = address;
+	this->address = new_address;
 	this->clear_on_connect = clear;
 }
 
