@@ -1,64 +1,85 @@
 #include <GarrysMod/FactoryLoader.hpp>
-#include "GameEventListener.h"
-#include "datacache/imdlcache.h"
 #include "datacache/idatacache.h"
+#include "datacache/imdlcache.h"
+#include "engine/ivmodelinfo.h"
+#include "vphysics_interface.h"
 #include "vstdlib/jobthread.h"
+#include "GameEventListener.h"
+#include "istudiorender.h"
 #include "cache.h"
 #include "util.h"
-
-#if Cache_UseNotify == 1
-#include <unordered_map>
-#endif 
 
 #if Cache_Experimental == 1
 #include <unordered_map>
 #include "materialsystem/imaterialsystem.h"
 #endif
 
+static SourceSDK::FactoryLoader engine_loader("engine");
+static SourceSDK::FactoryLoader vphysics_loader("vphysics");
 static SourceSDK::FactoryLoader datacache_loader("datacache");
+static SourceSDK::FactoryLoader studiorender_loader("studiorender");
 #if Cache_Experimental == 1
 static SourceSDK::FactoryLoader materialsystem_loader("materialsystem");
 #endif
 
 static IMDLCache* MDLCache = nullptr;
 static IDataCache* DataCache = nullptr;
+static IVModelInfo* VModelInfo = nullptr;
+static IStudioRender* StudioRender = nullptr;
+static IPhysicsCollision* PhysicsCollision = nullptr;
 #if Cache_Experimental == 1
 static IMaterialSystem* MaterialSystem = nullptr;
 static std::unordered_map<const char*, bool> material_cache;
 #endif
 
-#if Cache_UseNotify == 1
-static MDlCacheUpdate* cacheupdate = new MDlCacheUpdate;
-
-class Cache_Entry
+/*
+* (Class) Cache Entry
+*/
+Cache_Entry::Cache_Entry(MDLHandle_t handle, MDLCacheDataType_t type)
 {
-public:
-	MDLHandle_t handle;
-	MDLCacheDataType_t type;
+	this->handle = handle;
+	this->type = type;
+}
 
-	Cache_Entry(MDLHandle_t handle, MDLCacheDataType_t type)
-	{
-		this->handle = handle;
-		this->type = type;
-	};
-
-	void Unload(IMDLCache* MDLCache) {
-		int invalid = MDLCache->GetRef(this->handle);
-		if (invalid == 0) {
-			return;
-		}
-		//Msg(std::to_string(MDLCache->GetRef(this->handle)).c_str());
-		MDLCache->Flush(this->handle, MDLCACHE_FLUSH_ALL);
+void Cache_Entry::Unload(IMDLCache* MDLCache) {
+	int invalid = MDLCache->GetRef(this->handle);
+	if (invalid == 0) {
+		return;
 	}
-};
 
+	if (type == MDLCACHE_STUDIOHDR) {
+		//studiohdr_t* data = MDLCache->GetStudioHdr(handle); // nothing needed?
+	} else if (type == MDLCACHE_STUDIOHWDATA) {
+		studiohwdata_t* hwdata = MDLCache->GetHardwareData(handle);
+		StudioRender->UnloadModel(hwdata);
+	} else {
+		vcollide_t* physics = MDLCache->GetVCollide(handle);
+		PhysicsCollision->VCollideUnload(physics);
+	}
+
+	MDLCache->Flush(this->handle, MDLCACHE_FLUSH_ALL);
+}
+
+void test() {};
+
+/*
+* (Class) IMDlCacheUpdate
+*/
 static std::unordered_map<MDLHandle_t, Cache_Entry*> cache;
-class MDlCacheUpdate : public IMDLCacheNotify
+class IMDlCacheUpdate : public IMDLCacheNotify
 {
 	void OnDataLoaded(MDLCacheDataType_t type, MDLHandle_t handle)
 	{
 		Cache_Entry* entry = new Cache_Entry(handle, type);
 		cache[handle] = entry;
+		Msg(MDLCache->GetModelName(handle));
+		Msg("\n");
+		Msg(std::to_string(type).c_str());
+		Msg("\n");
+;
+		if (type == MDLCACHE_STUDIOHWDATA) {
+			VModelInfo->RegisterDynamicModel(MDLCache->GetModelName(handle), true); // This fixes some weird engine issue. As soon as you add a IMDLCacheNotify, the Lightning and collision of most models will break.
+		}
 	}
 
 	void OnDataUnloaded(MDLCacheDataType_t type, MDLHandle_t handle)
@@ -68,8 +89,11 @@ class MDlCacheUpdate : public IMDLCacheNotify
 		cache.erase(handle);
 	}
 };
-#endif
+static IMDlCacheUpdate* MDlCacheUpdate = new IMDlCacheUpdate;
 
+/*
+* ClearCache
+*/
 unsigned ClearCache(void* params) {
 	ThreadParams_t* vars = (ThreadParams_t*)params;
 	if (vars->delay > 0) {
@@ -79,7 +103,6 @@ unsigned ClearCache(void* params) {
 	Msg("[Cache] Starting to clear the Cache\n");
 	CThreadMutex().Lock();
 
-#if Cache_UseNotify == 1
 #if Cache_Debug == 1
 	Msg("----Cache----\n");
 	for (auto& [mdl, entry] : vars->cache) {
@@ -94,21 +117,20 @@ unsigned ClearCache(void* params) {
 		entry->Unload(vars->MDLCache);
 		cache.erase(entry->handle);
 	}
-#else
+
 	if (vars->fullflush) {
 		vars->MDLCache->Flush(MDLCACHE_FLUSH_ALL);
 	}
 	else {
 		//vars->MDLCache->Flush(MDLCACHE_FLUSH_STUDIOHDR); // Crashes the DataCache
-		vars->MDLCache->Flush(MDLCACHE_FLUSH_STUDIOHWDATA);
+		//vars->MDLCache->Flush(MDLCACHE_FLUSH_STUDIOHWDATA); // Cleared by the code above
 		//vars->MDLCache->Flush(MDLCACHE_FLUSH_VCOLLIDE); // If this is enabled, it will crash vphysics.
 		vars->MDLCache->Flush(MDLCACHE_FLUSH_ANIMBLOCK);
 		vars->MDLCache->Flush(MDLCACHE_FLUSH_VIRTUALMODEL);
 		vars->MDLCache->Flush(MDLCACHE_FLUSH_AUTOPLAY);
 		vars->MDLCache->Flush(MDLCACHE_FLUSH_VERTEXES);
-		vars->MDLCache->Flush(MDLCACHE_FLUSH_IGNORELOCK);
+		//vars->MDLCache->Flush(MDLCACHE_FLUSH_IGNORELOCK);
 	}
-#endif
 
 #if Cache_Experimental == 1
 	bool loop = true;
@@ -153,6 +175,9 @@ unsigned ClearCache(void* params) {
 	return 0;
 }
 
+/*
+* (Class) CacheMgr
+*/
 void CacheMgr::Connect(IGameEvent* event)
 {
 #if Cache_AwaysFlush == 0 // We don't need to clear the Cache because it got already cleared when the client disconnected from the server if Cache_AwaysFlush is enabled.
@@ -238,9 +263,7 @@ bool CacheMgr::Flush(int delay, bool full, bool threaded, bool force)
 	if (force || !this->connected) {
 		ThreadParams_t* vars = new ThreadParams_t;
 		vars->delay = delay;
-		#if Cache_UseNotify == 1
-			vars->cache = cache;
-		#endif
+		vars->cache = cache;
 		vars->fullflush = full;
 		vars->MDLCache = MDLCache;
 		vars->DataCache = DataCache;
@@ -277,15 +300,25 @@ CacheMgr::CacheMgr()
 	if (DataCache == nullptr)
 		ThrowError("unable to initialize IDataCache");
 
+	VModelInfo = (IVModelInfo*)engine_loader.GetFactory()(VMODELINFO_CLIENT_INTERFACE_VERSION, nullptr);
+	if (VModelInfo == nullptr)
+		ThrowError("unable to initialize IStudioRender");
+
+	StudioRender = (IStudioRender*)studiorender_loader.GetFactory()(STUDIO_RENDER_INTERFACE_VERSION, nullptr);
+	if (StudioRender == nullptr)
+		ThrowError("unable to initialize IStudioRender");
+
+	PhysicsCollision = (IPhysicsCollision*)vphysics_loader.GetFactory()(VPHYSICS_COLLISION_INTERFACE_VERSION, nullptr);
+	if (PhysicsCollision == nullptr)
+		ThrowError("unable to initialize IPhysicsCollision");
+
 	#if Cache_Experimental == 1
 		MaterialSystem = (IMaterialSystem*)materialsystem_loader.GetFactory()(MATERIAL_SYSTEM_INTERFACE_VERSION, nullptr);
 		if (MaterialSystem == nullptr)
 			ThrowError("unable to initialize IMaterialSystem");
 	#endif
 
-	#if Cache_UseNotify == 1
-		MDLCache->SetCacheNotify(cacheupdate);
-	#endif
+	MDLCache->SetCacheNotify(MDlCacheUpdate);
 
 	// this->SetAsyncCacheDataType(MDLCACHE_STUDIOHDR, true, false, "MDLCACHE_STUDIOHDR"); cannot be activated
 	this->SetAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, true, false, "MDLCACHE_STUDIOHWDATA");
@@ -294,4 +327,15 @@ CacheMgr::CacheMgr()
 	// this->SetAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, true, false, "MDLCACHE_VIRTUALMODEL"); cannot be activated
 	this->SetAsyncCacheDataType(MDLCACHE_VERTEXES, true, false, "MDLCACHE_VERTEXES");
 	// this->SetAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, true, false, "MDLCACHE_DECODEDANIMBLOCK"); cannot be activated
+}
+
+void CacheMgr::Shutdown()
+{
+	// this->SetAsyncCacheDataType(MDLCACHE_STUDIOHDR, false, false, "MDLCACHE_STUDIOHDR");
+	this->SetAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, false, false, "MDLCACHE_STUDIOHWDATA");
+	this->SetAsyncCacheDataType(MDLCACHE_VCOLLIDE, false, false, "MDLCACHE_VCOLLIDE");
+	// this->SetAsyncCacheDataType(MDLCACHE_ANIMBLOCK, false, false, "MDLCACHE_ANIMBLOCK");
+	// this->SetAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, false, false, "MDLCACHE_VIRTUALMODEL");
+	this->SetAsyncCacheDataType(MDLCACHE_VERTEXES, false, false, "MDLCACHE_VERTEXES");
+	// this->SetAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, false, false, "MDLCACHE_DECODEDANIMBLOCK");
 }

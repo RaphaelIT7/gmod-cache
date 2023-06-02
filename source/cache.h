@@ -1,23 +1,33 @@
 #pragma once
 
+#include <unordered_map>
 #include "datacache/imdlcache.h"
 #include "datacache/idatacache.h"
 
 #define Cache_Debug 0
-#define Cache_UseNotify 0 // Set this to 1 if you want to use a Cache instead of clearing the whole cache each time. This can cause the lightning on some models to break!
+#define Cache_UseNotify 1 // Set this to 1 if you want to use a Cache instead of clearing the whole cache each time. This can cause the lightning on some models to break!
 #define Cache_AwaysFlush 0 // Enable this if you want to clear the cache every time you disconnect from a server. This can cause crashes!
 #define Cache_Experimental 0 // Enable this to enable features that are in development like clearing the Materials too. (This is Experimental)
 
+class Cache_Entry
+{
+public:
+	MDLHandle_t handle;
+	MDLCacheDataType_t type;
+
+	Cache_Entry(MDLHandle_t, MDLCacheDataType_t);
+
+	void Unload(IMDLCache*);
+};
+
 struct ThreadParams_t
 {
-	#if Cache_Experimental == 1
-		std::unordered_map<const char*, bool> material_cache;
-		IMaterialSystem* MaterialSystem;
-	#endif
+#if Cache_Experimental == 1
+	std::unordered_map<const char*, bool> material_cache;
+	IMaterialSystem* MaterialSystem;
+#endif
 
-	#if Cache_UseNotify == 1
-		std::unordered_map<MDLHandle_t, Cache_Entry*> cache;
-	#endif
+	std::unordered_map<MDLHandle_t, Cache_Entry*> cache;
 	int delay;
 	bool fullflush;
 	IDataCache* DataCache;
@@ -43,6 +53,7 @@ public:
 
 	void Connect(IGameEvent* event);
 	void Disconnect();
+	void Shutdown();
 	
 	bool SetAsyncCacheDataType(MDLCacheDataType_t, bool);
 	bool SetAsyncCacheDataType(MDLCacheDataType_t, bool, bool, const char*);

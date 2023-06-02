@@ -37,6 +37,16 @@ public:
 	}
 };
 
+class QuitEventListener : public IGameEventListener2
+{
+public:
+	QuitEventListener() = default;
+
+	void FireGameEvent(IGameEvent* event) {
+		Cache->Shutdown();
+	}
+};
+
 static IGameEventManager2* eventmanager = nullptr;
 void Gameevents_AddListener(IGameEventListener2* listener, const char* event, bool server) {
 	eventmanager->AddListener(listener, event, server);
@@ -52,4 +62,5 @@ void Gameevents_Init()
 	Gameevents_AddListener(new ActivateEventListener, "server_spawn", false);
 	Gameevents_AddListener(new DisconnectEventListener, "client_disconnect", false);
 	Gameevents_AddListener(new InGameEventListener, "player_activate", false);
+	Gameevents_AddListener(new QuitEventListener, "host_quit", false);
 }
