@@ -8,7 +8,7 @@
 #define Cache_UseNotify 1 // Set this to 1 if you want to use a Cache instead of clearing the whole cache each time. This can cause the lightning on some models to break!
 #define Cache_AwaysFlush 0 // Enable this if you want to clear the cache every time you disconnect from a server. This can cause crashes!
 #define Cache_Experimental 0 // Enable this to enable features that are in development like clearing the Materials too. (This is Experimental)
-#define IsPlatformOpenCL 0
+#define IsPlatformOpenGL 0
 
 class Cache_Entry
 {
