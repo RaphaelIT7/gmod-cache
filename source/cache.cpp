@@ -66,8 +66,6 @@ void Cache_Entry::Unload(IMDLCache* MDLCache) {
 static std::unordered_map<MDLHandle_t, Cache_Entry*> cache;
 class IMDLCacheUpdate : public IMDLCacheNotify
 {
- IMDLCacheUpdate():
-
 	void OnDataLoaded(MDLCacheDataType_t type, MDLHandle_t handle)
 	{
 		Cache_Entry* entry = new Cache_Entry(handle, type);
