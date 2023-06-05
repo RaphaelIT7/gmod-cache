@@ -6,8 +6,8 @@
 #include "vstdlib/jobthread.h"
 #include "GameEventListener.h"
 
-// #define IsPlatformOpenGL 0
-// #include "istudiorender.h"
+#define IsPlatformOpenGL 0
+#include "istudiorender.h"
 #include "cache.h"
 #include "util.h"
 
@@ -19,7 +19,7 @@
 static SourceSDK::FactoryLoader engine_loader("engine");
 static SourceSDK::FactoryLoader vphysics_loader("vphysics");
 static SourceSDK::FactoryLoader datacache_loader("datacache");
-// static SourceSDK::FactoryLoader studiorender_loader("studiorender");
+static SourceSDK::FactoryLoader studiorender_loader("studiorender");
 #if Cache_Experimental == 1
 static SourceSDK::FactoryLoader materialsystem_loader("materialsystem");
 #endif
@@ -27,7 +27,7 @@ static SourceSDK::FactoryLoader materialsystem_loader("materialsystem");
 static IMDLCache* MDLCache = nullptr;
 static IDataCache* DataCache = nullptr;
 static IVModelInfo* VModelInfo = nullptr;
-// static IStudioRender* StudioRender = nullptr;
+static IStudioRender* StudioRender = nullptr;
 static IPhysicsCollision* PhysicsCollision = nullptr;
 #if Cache_Experimental == 1
 static IMaterialSystem* MaterialSystem = nullptr;
@@ -53,7 +53,7 @@ void Cache_Entry::Unload(IMDLCache* MDLCache) {
 		//studiohdr_t* data = MDLCache->GetStudioHdr(handle); // nothing needed?
 	} else if (type == MDLCACHE_STUDIOHWDATA) {
 		studiohwdata_t* hwdata = MDLCache->GetHardwareData(handle);
-		// StudioRender->UnloadModel(hwdata);
+		StudioRender->UnloadModel(hwdata);
 	} else {
 		vcollide_t* physics = MDLCache->GetVCollide(handle);
 		PhysicsCollision->VCollideUnload(physics);
@@ -304,9 +304,9 @@ CacheMgr::CacheMgr()
 	if (VModelInfo == nullptr)
 		ThrowError("unable to initialize IStudioRender");
 
-	// StudioRender = (IStudioRender*)studiorender_loader.GetFactory()(STUDIO_RENDER_INTERFACE_VERSION, nullptr);
-	// if (StudioRender == nullptr)
-		// ThrowError("unable to initialize IStudioRender");
+	StudioRender = (IStudioRender*)studiorender_loader.GetFactory()(STUDIO_RENDER_INTERFACE_VERSION, nullptr);
+	if (StudioRender == nullptr)
+		ThrowError("unable to initialize IStudioRender");
 
 	PhysicsCollision = (IPhysicsCollision*)vphysics_loader.GetFactory()(VPHYSICS_COLLISION_INTERFACE_VERSION, nullptr);
 	if (PhysicsCollision == nullptr)
