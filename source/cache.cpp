@@ -76,7 +76,7 @@ class IMDLCacheUpdate : public IMDLCacheNotify
 		Msg("\n");
 ;
 		if (type == MDLCACHE_STUDIOHWDATA) {
-			MDLCache->RestoreHardwareData(handle, (FSAsyncControl_t*)1, (FSAsyncControl_t*)1); // This fixes some weird engine issue. As soon as you add a IMDLCacheNotify, the Lightning and collision of most models will break.
+			//MDLCache->RestoreHardwareData(handle, (FSAsyncControl_t*)0, (FSAsyncControl_t*)0); // This fixes some weird engine issue. As soon as you add a IMDLCacheNotify, the Lightning and collision of most models will break.
 		} else if (type == MDLCACHE_VCOLLIDE) {
 			MDLCache->ReloadVCollide(handle);
 		}
