@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GarrysMod/Lua/Interface.h"
-#include "appframework/IAppSystem.h"
 #include "GameEventListener.h"
 #include "fasttimer.h" // Fixes the SourceSDK!
 #include <string>
