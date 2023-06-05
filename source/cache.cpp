@@ -60,13 +60,11 @@ void Cache_Entry::Unload(IMDLCache* MDLCache) {
 	MDLCache->Flush(this->handle, MDLCACHE_FLUSH_ALL);
 }
 
-void test() {};
-
 /*
-* (Class) IMDlCacheUpdate
+* (Class) IMDLCacheUpdate
 */
 static std::unordered_map<MDLHandle_t, Cache_Entry*> cache;
-class IMDlCacheUpdate : public IMDLCacheNotify
+class IMDLCacheUpdate : public IMDLCacheNotify
 {
 	void OnDataLoaded(MDLCacheDataType_t type, MDLHandle_t handle)
 	{
@@ -89,7 +87,7 @@ class IMDlCacheUpdate : public IMDLCacheNotify
 		cache.erase(handle);
 	}
 };
-static IMDlCacheUpdate* MDlCacheUpdate = new IMDlCacheUpdate;
+static IMDLCacheUpdate* MDLCacheUpdate = new IMDLCacheUpdate;
 
 /*
 * ClearCache
@@ -318,7 +316,7 @@ CacheMgr::CacheMgr()
 			ThrowError("unable to initialize IMaterialSystem");
 	#endif
 
-	MDLCache->SetCacheNotify(MDlCacheUpdate);
+	MDLCache->SetCacheNotify(MDLCacheUpdate);
 
 	// this->SetAsyncCacheDataType(MDLCACHE_STUDIOHDR, true, false, "MDLCACHE_STUDIOHDR"); cannot be activated
 	this->SetAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, true, false, "MDLCACHE_STUDIOHWDATA");
