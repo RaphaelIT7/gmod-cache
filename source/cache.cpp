@@ -5,6 +5,8 @@
 #include "vphysics_interface.h"
 #include "vstdlib/jobthread.h"
 #include "GameEventListener.h"
+
+#define IsPlatformOpenGL 0
 #include "istudiorender.h"
 #include "cache.h"
 #include "util.h"
