@@ -1,3 +1,4 @@
+#include "util.h"
 #include <GarrysMod/FactoryLoader.hpp>
 #include "datacache/idatacache.h"
 #include "datacache/imdlcache.h"
@@ -7,7 +8,6 @@
 #include "GameEventListener.h"
 #include "istudiorender.h"
 #include "cache.h"
-#include "util.h"
 
 #if Cache_Experimental == 1
 #include <unordered_map>
@@ -76,7 +76,9 @@ class IMDLCacheUpdate : public IMDLCacheNotify
 		Msg("\n");
 ;
 		if (type == MDLCACHE_STUDIOHWDATA) {
-			VModelInfo->RegisterDynamicModel(MDLCache->GetModelName(handle), true); // This fixes some weird engine issue. As soon as you add a IMDLCacheNotify, the Lightning and collision of most models will break.
+			MDLCache->RestoreHardwareData(handle, (FSAsyncControl_t*)1, (FSAsyncControl_t*)1); // This fixes some weird engine issue. As soon as you add a IMDLCacheNotify, the Lightning and collision of most models will break.
+		} else if (type == MDLCACHE_FLUSH_VCOLLIDE) {
+			MDLCache->ReloadVCollide(handle);
 		}
 	}
 
@@ -85,6 +87,15 @@ class IMDLCacheUpdate : public IMDLCacheNotify
 		//Msg(std::to_string(MDLCache->GetRef(handle)).c_str());
 		//Msg(MDLCache->GetModelName(handle)); // Just some testing. It seems like GetModelName returns garbage when the data is already unloaded? Returned Data: ????=???7????T??=?
 		cache.erase(handle);
+	}
+
+	void OnCombinerPreCache(MDLHandle_t OldHandle, MDLHandle_t NewHandle)
+	{
+	}
+
+	bool ShouldSupressLoadWarning(MDLHandle_t handle)
+	{
+		return false;
 	}
 };
 static IMDLCacheUpdate* MDLCacheUpdate = new IMDLCacheUpdate;
@@ -127,6 +138,7 @@ unsigned ClearCache(void* params) {
 		vars->MDLCache->Flush(MDLCACHE_FLUSH_VIRTUALMODEL);
 		vars->MDLCache->Flush(MDLCACHE_FLUSH_AUTOPLAY);
 		vars->MDLCache->Flush(MDLCACHE_FLUSH_VERTEXES);
+		vars->MDLCache->Flush(MDLCACHE_FLUSH_COMBINED_DATA);
 		//vars->MDLCache->Flush(MDLCACHE_FLUSH_IGNORELOCK);
 	}
 
