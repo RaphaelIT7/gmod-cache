@@ -18,6 +18,8 @@
 	#define IsPlatformOpenGL() true
 #endif
 
+typedef enum _D3DFORMAT D3DFORMAT;
+
 
 using namespace GarrysMod::Lua;
 
