@@ -81,7 +81,7 @@ void LUA_InitMenu(GarrysMod::Lua::ILuaBase* LUA) {
 
 #if Cache_Debug == 1
 	LUA->GetField(-1, "engine");
-	LUA->PushCFunction(check_async);
+	LUA->PushCFunction(cache_checkasync);
 	LUA->SetField(-2, "check_async");
 	LUA->Pop(1);
 #endif
@@ -99,7 +99,7 @@ void LUA_InitMenu(GarrysMod::Lua::ILuaBase* LUA) {
 		Add_Func(LUA, cache_flush, "Flush");
 		Add_Func(LUA, cache_setasync, "SetAsync");
 		Add_Func(LUA, cache_getasync, "GetAsync");
-  Add_Func(LUA, cache_checkasync, "CheckAsync");
+		Add_Func(LUA, cache_checkasync, "CheckAsync");
 		Add_Func(LUA, cache_shouldclear, "ShouldClear");
 	Finish_Table(LUA, "cache");
 

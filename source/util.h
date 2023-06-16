@@ -2,24 +2,10 @@
 
 #include "GarrysMod/Lua/Interface.h"
 #include "GameEventListener.h"
-#include "fasttimer.h" // Fixes the SourceSDK!
+#include "gameevents.h"
 #include <string>
 #include "cache.h"
 #include "lua.h"
-
-// SourceSDK is broken!
-#ifdef _WIN32
-	#if defined( DX_TO_GL_ABSTRACTION )
-	#define IsPlatformOpenGL() true
-	#else
-	#define IsPlatformOpenGL() false
-	#endif
-#elif defined(POSIX)
-	#define IsPlatformOpenGL() true
-#endif
-
-typedef enum _D3DFORMAT D3DFORMAT;
-
 
 using namespace GarrysMod::Lua;
 

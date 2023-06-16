@@ -1,10 +1,12 @@
 #pragma once
 
+#include "notify.h"
 #include <unordered_map>
+#include "GameEventListener.h"
 #include "datacache/imdlcache.h"
 #include "datacache/idatacache.h"
 
-#define Cache_Debug 0
+#define Cache_Debug 1
 #define Cache_UseNotify 1 // Set this to 1 if you want to use a Cache instead of clearing the whole cache each time. This can cause the lightning on some models to break!
 #define Cache_AwaysFlush 0 // Enable this if you want to clear the cache every time you disconnect from a server. This can cause crashes!
 #define Cache_Experimental 0 // Enable this to enable features that are in development like clearing the Materials too. (This is Experimental)
@@ -37,7 +39,7 @@ struct ThreadParams_t
 class CacheMgr
 {
 public:
-	bool connected;
+	bool connected = false;
 	bool alwaysflush = false;
 	const char* address = "";
 	bool clear_on_connect = false;

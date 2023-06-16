@@ -2,7 +2,6 @@
 #include <GarrysMod/FactoryLoader.hpp>
 #include "datacache/idatacache.h"
 #include "datacache/imdlcache.h"
-#include "engine/ivmodelinfo.h"
 #include "vphysics_interface.h"
 #include "vstdlib/jobthread.h"
 #include "GameEventListener.h"
@@ -14,19 +13,15 @@
 #include "materialsystem/imaterialsystem.h"
 #endif
 
-static SourceSDK::FactoryLoader engine_loader("engine");
 static SourceSDK::FactoryLoader vphysics_loader("vphysics");
 static SourceSDK::FactoryLoader datacache_loader("datacache");
-static SourceSDK::FactoryLoader studiorender_loader("studiorender");
 #if Cache_Experimental == 1
 static SourceSDK::FactoryLoader materialsystem_loader("materialsystem");
 #endif
 
 static IMDLCache* MDLCache = nullptr;
-static IDataCache* DataCache = nullptr;
-static IVModelInfo* VModelInfo = nullptr;
-static IStudioRender* StudioRender = nullptr;
 static IPhysicsCollision* PhysicsCollision = nullptr;
+
 #if Cache_Experimental == 1
 static IMaterialSystem* MaterialSystem = nullptr;
 static std::unordered_map<const char*, bool> material_cache;
@@ -51,7 +46,7 @@ void Cache_Entry::Unload(IMDLCache* MDLCache) {
 		//studiohdr_t* data = MDLCache->GetStudioHdr(handle); // nothing needed?
 	} else if (type == MDLCACHE_STUDIOHWDATA) {
 		studiohwdata_t* hwdata = MDLCache->GetHardwareData(handle);
-		StudioRender->UnloadModel(hwdata);
+		//StudioRender->UnloadModel(hwdata);
 	} else {
 		vcollide_t* physics = MDLCache->GetVCollide(handle);
 		PhysicsCollision->VCollideUnload(physics);
@@ -239,14 +234,17 @@ bool CacheMgr::SetAsyncCacheDataType(MDLCacheDataType_t type, bool enabled) {
 }
 
 bool CacheMgr::SetAsyncCacheDataType(MDLCacheDataType_t type, bool enabled, bool print, const char* type_str) {
-	MDLCache->SetAsyncLoad(type, enabled);
+	//MDLCache->SetAsyncLoad(type, enabled);
 
 	bool worked = MDLCache->GetAsyncLoad(type);
-	if (print && !worked) {
-		std::string msg = "Failed to enable AsyncLoad for type ";
-		msg.append(type_str);
-		msg.append("\n");
-		ConDMsg(msg.c_str());
+	if (print) {
+		//bool worked = MDLCache->GetAsyncLoad(type);
+		if (!worked) {
+			std::string msg = "Failed to enable AsyncLoad for type ";
+			msg.append(type_str);
+			msg.append("\n");
+			ConDMsg(msg.c_str());
+		}
 	}
 
 	return worked;
@@ -276,7 +274,7 @@ bool CacheMgr::Flush(int delay, bool full, bool threaded, bool force)
 		vars->cache = cache;
 		vars->fullflush = full;
 		vars->MDLCache = MDLCache;
-		vars->DataCache = DataCache;
+		//vars->DataCache = DataCache;
 		#if Cache_Experimental == 1
 			vars->material_cache = material_cache;
 			vars->MaterialSystem = MaterialSystem;
@@ -306,18 +304,6 @@ CacheMgr::CacheMgr()
 	if (MDLCache == nullptr)
 		ThrowError("unable to initialize IMDLCache");
 
-	DataCache = (IDataCache*)datacache_loader.GetFactory()(DATACACHE_INTERFACE_VERSION, nullptr);
-	if (DataCache == nullptr)
-		ThrowError("unable to initialize IDataCache");
-
-	VModelInfo = (IVModelInfo*)engine_loader.GetFactory()(VMODELINFO_CLIENT_INTERFACE_VERSION, nullptr);
-	if (VModelInfo == nullptr)
-		ThrowError("unable to initialize IStudioRender");
-
-	StudioRender = (IStudioRender*)studiorender_loader.GetFactory()(STUDIO_RENDER_INTERFACE_VERSION, nullptr);
-	if (StudioRender == nullptr)
-		ThrowError("unable to initialize IStudioRender");
-
 	PhysicsCollision = (IPhysicsCollision*)vphysics_loader.GetFactory()(VPHYSICS_COLLISION_INTERFACE_VERSION, nullptr);
 	if (PhysicsCollision == nullptr)
 		ThrowError("unable to initialize IPhysicsCollision");
@@ -328,14 +314,14 @@ CacheMgr::CacheMgr()
 			ThrowError("unable to initialize IMaterialSystem");
 	#endif
 
-	MDLCache->SetCacheNotify(MDLCacheUpdate);
+	//MDLCache->SetCacheNotify(MDLCacheUpdate); Why is the MDLCache broken!?!?! using any Set* function breaks the entire cache -> crashes the game.
 
 	// this->SetAsyncCacheDataType(MDLCACHE_STUDIOHDR, true, false, "MDLCACHE_STUDIOHDR"); cannot be activated
-	this->SetAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, true, false, "MDLCACHE_STUDIOHWDATA");
-	this->SetAsyncCacheDataType(MDLCACHE_VCOLLIDE, true, false, "MDLCACHE_VCOLLIDE");
+	// this->SetAsyncCacheDataType(MDLCACHE_STUDIOHWDATA, true, false, "MDLCACHE_STUDIOHWDATA");
+	// this->SetAsyncCacheDataType(MDLCACHE_VCOLLIDE, true, false, "MDLCACHE_VCOLLIDE");
 	// this->SetAsyncCacheDataType(MDLCACHE_ANIMBLOCK, true, false, "MDLCACHE_ANIMBLOCK"); if activated, it breaks some playermodels
 	// this->SetAsyncCacheDataType(MDLCACHE_VIRTUALMODEL, true, false, "MDLCACHE_VIRTUALMODEL"); cannot be activated
-	this->SetAsyncCacheDataType(MDLCACHE_VERTEXES, true, false, "MDLCACHE_VERTEXES");
+	// this->SetAsyncCacheDataType(MDLCACHE_VERTEXES, true, false, "MDLCACHE_VERTEXES");
 	// this->SetAsyncCacheDataType(MDLCACHE_DECODEDANIMBLOCK, true, false, "MDLCACHE_DECODEDANIMBLOCK"); cannot be activated
 }
 
