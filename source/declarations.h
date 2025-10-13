@@ -6,6 +6,10 @@
 #include <engine/ivmodelinfo.h>
 #include <cmodel.h>
 
+#include "tier1/utldict.h"
+#include "tier1/utllinkedlist.h"
+#include "filesystem.h"
+
 class ITexture;
 struct mtexinfo_t
 {
@@ -379,3 +383,50 @@ struct model_t
 
 #define SURFDRAW_VERTCOUNT_SHIFT	24
 #define SURFDRAW_SORTGROUP_SHIFT	22
+
+#define MDLCACHE_NONE ((MDLCacheDataType_t)-1)
+struct AsyncInfo_t
+{
+	AsyncInfo_t() : hControl( NULL ), hModel( MDLHANDLE_INVALID ), type( MDLCACHE_NONE ), iAnimBlock( 0 ) {}
+
+	FSAsyncControl_t	hControl;
+	MDLHandle_t			hModel;
+	MDLCacheDataType_t	type;
+	int					iAnimBlock;
+};
+
+const int NO_ASYNC = CUtlLinkedList< AsyncInfo_t >::InvalidIndex();
+
+class IDataCacheSection;
+struct studiodata_t;
+//-----------------------------------------------------------------------------
+// Implementation of the simple studio data cache (no caching)
+//-----------------------------------------------------------------------------
+class CMDLCache : public IMDLCache
+{
+public:
+	CMDLCache();
+
+	// No functions since we only want the members
+
+public:
+	IDataCacheSection *m_pModelCacheSection;
+	IDataCacheSection *m_pMeshCacheSection;
+	IDataCacheSection *m_pAnimBlockCacheSection;
+
+	int m_nModelCacheFrameLocks;
+	int m_nMeshCacheFrameLocks;
+
+	CUtlDict< studiodata_t*, MDLHandle_t > m_MDLDict;
+
+	IMDLCacheNotify *m_pCacheNotify;
+
+	CUtlFixedLinkedList< AsyncInfo_t > m_PendingAsyncs;
+
+	CThreadFastMutex m_QueuedLoadingMutex;
+	CThreadFastMutex m_AsyncMutex;
+
+	bool m_bLostVideoMemory : 1;
+	bool m_bConnected : 1;
+	bool m_bInitialized : 1;
+};
